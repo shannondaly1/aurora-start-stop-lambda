@@ -1,135 +1,34 @@
-# AWS RDS START / STOP
+# AWS Aurora Start/Stop
 
-RDS Start / Stop is a Lambda Function code aims to stop/start RDS's on a scheduled basis.
+A Lambda function to start and stop an Aurora cluster on a schedule.
 
-## Getting Started
 
-These instructions will get you a copy of the project up and running on your AWS Account.
+### Instructions
 
-### Prerequisites
+1. Create an IAM Role with full Lambda/RDS access.
+2. Create a NodeJS Lambda function. Compress the code as a ZIP and upload it.
+3. Select the IAM Role created for the Lambda function.
 
-What things you need to know / have before installing this lambda function.
+## Testing
 
-```
-AWS Account - Yay! It's so important
-AWS Permissions - It's also..
-```
-
-### Installing
-
-First clone the script on your local and run below command to create node_modules on localy and zip the entire content but not parent directory.
-
-``` 
-npm install 
-```
-
-And then before creating a lambda function, we need to create a IAM Role. Below you can find CFN template or IAM Policy Raw for this role. 
-
-Policy
-```
-{
-    "Version": "2012-10-17",
-    "Statement": [        
-        {
-            "Action": [
-                "rds:StopDBInstance",
-                "rds:StartDBInstance"
-            ],
-            "Effect": "Allow",
-            "Resource": "*"
-        }
-    ]
-}
-```
-
-or CFN
+Test Stop Event:
 
 ```
-  LambdaRdsStartStopRole:
-    Type: 'AWS::IAM::Role'
-    Condition: IsNotInfra
-    Properties:
-      AssumeRolePolicyDocument:
-        Version: '2012-10-17'
-        Statement:
-          - Effect: Allow
-            Principal:
-              Service:
-                - rds.amazonaws.com
-                - lambda.amazonaws.com
-            Action: 'sts:AssumeRole'
-      Path: /
-      Policies:
-        - PolicyName: "lambda-rds-start-stop"
-          PolicyDocument:
-            Version: '2012-10-17'
-            Statement:
-              - 
-                Action:
-                  - 'rds:StopDBInstance'
-                  - 'rds:StartDBInstance'
-                Resource: '*'
-                Effect: Allow
-      RoleName: "LambdaRdsStartStop"
+{ "clusters": ["clusterId"], "action":"stop" }
 ```
 
-And now we can create a lambda function. 
-
- 1. Go to AWS console and proceeed with a nodeJS 6.10 Lambda function and Lambda IAM Role
- 2. Upload the zip code
- 3. And create the lambda function.
-
-## Running the tests
-
-To test your function, on your lambda function page click actions > configure test event and put below json.
+Test Start Event:
 
 ```
-{ "instances": ["rds-instance-id"], "action":"stop" }
+{ "clusters": ["clusterId"], "action":"start" }
 ```
-
-and after it's stopped, test with another config event;
-
-```
-{ "instances": ["rds-instance-id"], "action":"start" }
-```
-
-Note: Before using this on your Production or Real stack, take snapshot or test it on your dev environment.
 
 ### Scheduling
 
-For scheduling the lambda function;
+For scheduling the lambda function:
 
-1. Go to Cloudwatch > rules page and click "create rule" button.
-2. On the left side of creation page, fill your event source. Example: Schedule | Cron | 0 5 ? * MON-FRI * => That will run every day from Monday to Friday at 5:00 AM.
-3. On the right side of creation page, click "add target" button and find your Lambda Function.
-4. Click "configure test input" and choose " Constant (JSON text)".
-5. Write with the below JSON's for your needs .
-
-#### Stopping the Instances: 
-
-```
-{ "instances": ["rds-instance-id"], "action":"stop" }
-```
-
-#### Starting the Instances:
-
-```
-{ "instances": ["rds-instance-id"], "action":"start" }
-```
-
-## Built With
-
-* [Lambda](http://docs.aws.amazon.com/lambda/latest/dg/welcome.html) - The AWS Lambda
-* [NodeJs](https://nodejs.org/en/)
-
-## Contributing
-
-Wanna contribution ? Fork the project, commit and PR!
-
-## Authors
-
-* **Muhammet Arslan** - *Initial work* - [Geass](https://github.com/geass)
-
-## License
-
-This project is licensed under the MIT License
+- Create a CloudWatch Rule.
+- For  event source, create your schedule. Example: Schedule | Cron | 0 9 ? * MON-FRI * => That will run every day from Monday to Friday at 9:00 AM.
+- On the right side of creation page, click "add target" button and find your Lambda Function.
+- Click "Configure Test Input" and choose " Constant (JSON Text)".
+- Use the correct JSON script for your rule. e.g. Start cluster at 9am, stop cluster at 6pm.

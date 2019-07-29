@@ -1,20 +1,18 @@
-var startInstance = require('./start');
-var stopInstance = require('./stop');
+var start = require('./start');
+var stop = require('./stop');
 
 exports.handler = (event, context, callback) => {
-    event.instances.forEach((instance) => {
+    event.clusters.forEach((cluster) => {
         switch(event.action) {
             case 'stop':
-                console.log(`Stopping instance '${instance}'...`);
-                stopInstance(instance);
+                stop(cluster);
                 break;
             case 'start':
-                console.log(`Starting instance '${instance}'...`);
-                startInstance(instance);
+                start(cluster);
                 break;
             default:
                 throw `Invalid action ${event.action}`;
         }
     })
-    callback(null, 'Done!');
+    callback(null, 'Complete!');
 };
