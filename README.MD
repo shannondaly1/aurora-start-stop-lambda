@@ -31,9 +31,9 @@ Test Start Event:
 For scheduling the Lambda function:
 
 - Create a CloudWatch Rule.
-- For event source, create your schedule. Example: Schedule | Cron | 0 9 ? * MON-FRI * => That will run every day from Monday to Friday at 9:00 AM.
-- On the right side of creation page, click "add target" button and find your Lambda Function.
-- Click "Configure Test Input" and choose " Constant (JSON Text)".
-- Use the correct JSON script for your rule. e.g. Start cluster at 9am, stop cluster at 6pm.
+- For event source, create your schedule. Example: Schedule | Cron | 0 9 ? * 2-6 * => That will run every day from Monday to Friday at 9:00 AM.
+- Click Add Target and select your Lambda Function.
+- Click Configure Test Input and select Constant (JSON Text).
+- Select the corresponding JSON snippet for your rule. e.g. Start cluster at 9am, stop cluster at 6pm.
 
 ![Screenshot](cloudwatch_rule.png)
