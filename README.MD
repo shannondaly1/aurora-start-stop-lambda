@@ -1,7 +1,10 @@
 # AWS Aurora Start/Stop
 
-A Lambda function to start and stop an Aurora cluster on a schedule.
+Amazon Aurora now allows users to start and stop database clusters:
+https://aws.amazon.com/about-aws/whats-new/2018/09/amazon-aurora-stop-and-start/
 
+However, the database instance cannot be stopped/started. Only the database
+cluster can. This Lambda function to start and stop an Aurora cluster on a schedule.
 
 ### Instructions
 
