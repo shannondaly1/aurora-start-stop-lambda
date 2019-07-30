@@ -26,6 +26,8 @@ Test Start Event:
 { "clusters": ["clusterId"], "action":"start" }
 ```
 
+Replace `clusterId` with the DB Cluster ID found in Configuration.
+
 ### Scheduling
 
 For scheduling the Lambda function:
